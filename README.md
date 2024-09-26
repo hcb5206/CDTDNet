@@ -39,7 +39,7 @@ the second phase, please run the following command:
 python CDTDNet_test.py
 ```
 The results tested on our machine are as follows:
-![Test Results](./image/Fig_1.png)
+![Test Results](./image/Fig.png)
 
 If you want to run the training file for CSCRU, please execute the `main.py` file located in the `/CSCRU` folder with 
 the following command:
