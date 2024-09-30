@@ -60,7 +60,7 @@ class LSTMModel(nn.Module):
         # self.ATT = AttentionMechanism(input_size=1, hidden_size=64, sequence_length=64)
         # self.lstm = nn.LSTM(input_size=input_size, hidden_size=hidden_size, num_layers=2, batch_first=True,
         #                     bidirectional=True)
-        self.lstm = SUR_LSTM.Lstm(input_size=input_size, hidden_size=hidden_size, hidden_out_size=hidden_size)
+        self.lstm = CSCRU.Lstm(input_size=input_size, hidden_size=hidden_size)
         # self.fc = nn.Linear(hidden_size, output_size)
 
         # self.sru = sru.SRU(input_size, hidden_size, num_layers)
