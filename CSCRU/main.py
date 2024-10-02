@@ -93,10 +93,6 @@ for epoch in range(num_epochs):
     train_rmse = 0.0
     train_mse = 0.0
     trian_mae = 0.0
-    train_smape = 0.0
-    train_r2 = 0.0
-    train_nae = 0.0
-    train_ia = 0.0
     for inputs, targets in train_loader:
         # inputs = inputs.to(device)
         # targets = targets.to(device)
@@ -112,41 +108,25 @@ for epoch in range(num_epochs):
         rmse = root_mean_squared_error(targets, outputs.squeeze())
         mse = mean_squared_error(targets, outputs.squeeze())
         mae = mean_absolute_error(targets, outputs.squeeze())
-        smape = symmetric_mean_absolute_percentage_error(targets, outputs.squeeze())
-        r2 = coefficient_of_determination(targets, outputs.squeeze())
-        nae = NormalizedAbsoluteError(targets, outputs.squeeze())
-        ia = index_of_agreement(targets, outputs.squeeze())
         loss.backward()
 
-        # grad_values.append(model.lstm.blocks[0].layers[0].layers[0].wo.grad.norm().item())
+        grad_values.append(model.lstm.layers[0].wf_f.grad.norm().item())
 
         optimizer.step()
         epoch_train_loss += loss.item()
         train_rmse += rmse
         train_mse += mse
         trian_mae += mae
-        train_smape += smape
-        train_r2 += r2
-        train_nae += nae
-        train_ia += ia
     epoch_train_loss /= len(train_loader)
     train_rmse /= len(train_loader)
     train_mse /= len(train_loader)
     trian_mae /= len(train_loader)
-    train_smape /= len(train_loader)
-    train_r2 /= len(train_loader)
-    train_nae /= len(train_loader)
-    train_ia /= len(train_loader)
     train_losses.append(epoch_train_loss)
     model.eval()
     epoch_eval_loss = 0.0
     eval_rmse = 0.0
     eval_mse = 0.0
     eval_mae = 0.0
-    eval_smape = 0.0
-    eval_r2 = 0.0
-    eval_nae = 0.0
-    eval_ia = 0.0
     with torch.no_grad():
         for inputs, targets in eval_loader:
             # inputs = inputs.to(device)
@@ -162,26 +142,14 @@ for epoch in range(num_epochs):
             rmse = root_mean_squared_error(targets, outputs.squeeze())
             mse = mean_squared_error(targets, outputs.squeeze())
             mae = mean_absolute_error(targets, outputs.squeeze())
-            smape = symmetric_mean_absolute_percentage_error(targets, outputs.squeeze())
-            r2 = coefficient_of_determination(targets, outputs.squeeze())
-            nae = NormalizedAbsoluteError(targets, outputs.squeeze())
-            ia = index_of_agreement(targets, outputs.squeeze())
             epoch_eval_loss += loss.item()
             eval_rmse += rmse
             eval_mse += mse
             eval_mae += mae
-            eval_smape += smape
-            eval_r2 += r2
-            eval_nae += nae
-            eval_ia += ia
     epoch_eval_loss /= len(eval_loader)
     eval_rmse /= len(eval_loader)
     eval_mse /= len(eval_loader)
     eval_mae /= len(eval_loader)
-    eval_smape /= len(eval_loader)
-    eval_r2 /= len(eval_loader)
-    eval_nae /= len(eval_loader)
-    eval_ia /= len(eval_loader)
     eval_losses.append(epoch_eval_loss)
     end_time = time.time()
     epoch_time = end_time - start_time
@@ -189,9 +157,7 @@ for epoch in range(num_epochs):
     print(
         f'Epoch [{epoch + 1}/{num_epochs}], Time: {epoch_time:.2f}s, Train Loss: {epoch_train_loss:.4f}, Eval Loss: {epoch_eval_loss:.4f},'
         f' Train RMSE: {train_rmse:.4f}, Train MSE:{train_mse:.4f},Train MAE:{trian_mae:.4f},'
-        f'Train SMAPE:{train_smape:.4f},Train NAE:{train_nae:.4f},Train R2:{train_r2:.4f},Train IA:{train_ia:.4f},'
-        f'Eval RMSE:{eval_rmse:.4f}, Eval MSE:{eval_mse:.4f},Eval MAE:{eval_mae:.4f},'
-        f'Eval SMAPE:{eval_smape:.4f}, Eval NAE:{eval_nae:.4f},Eval R2:{eval_r2:.4f},Eval IA:{eval_ia:.4f}')
+        f'Eval RMSE:{eval_rmse:.4f}, Eval MSE:{eval_mse:.4f},Eval MAE:{eval_mae:.4f}')
 total_training_time = sum(epoch_times)
 print(f'Total training time: {total_training_time:.2f}s')
 # torch.save(model.state_dict(), model_path)
